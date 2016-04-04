@@ -1,0 +1,68 @@
+plugins {
+    id 'groovy'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'idea'
+}
+
+idea {
+    project {
+        ext.jdkName = '1.8'
+        ext.languageLevel = '1.8'
+    }
+}
+
+sourceCompatibility=JavaVersion.VERSION_1_8
+targetCompatibility=JavaVersion.VERSION_1_8
+
+repositories {
+//    mavenLocal()
+    mavenCentral()
+    //maven { url "http://m2.neo4j.org/content/repositories/releases/" }
+    maven { url "https://raw.github.com/neo4j-contrib/m2/master/releases" }
+}
+
+ext {
+    neo4jVersion = "2.3.3"
+    jerseyVersion = "1.19"
+//    neo4jClientVersion = "1.0.0-M04"
+}
+
+dependencies {
+    compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion
+    compile group: 'org.neo4j', name: 'neo4j-common', version: neo4jVersion
+    compile group: 'org.neo4j', name: 'neo4j-lucene-index', version: neo4jVersion
+    compile group: 'org.neo4j', name: 'server-api', version: neo4jVersion
+    compile group: 'org.neo4j.app', name: 'neo4j-server', version: neo4jVersion
+    compile 'com.google.guava:guava:19.0'
+
+    testCompile group: 'org.neo4j.contrib', name: 'neo4j-spock-extension', version: '0.6.0'
+//    testCompile "org.neo4j.driver:neo4j-java-driver:$neo4jClientVersion"
+
+    runtime 'org.glassfish.jersey.media:jersey-media-json-jackson:2.13'
+}
+
+version = "1.0.0-SNAPSHOT"
+group = "org.neo4j.extension.tei"
+
+shadowJar {
+  dependencies {
+    include(dependency('org.glassfish.jersey.media:jersey-media-json-jackson'))
+  }
+}
+
+/*
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            //            url "file://$buildDir/repo" // change to point to your repo, e.g. http://my.org/repo
+            url '../m2/snapshots'  // TODO: externalize this
+        }
+    }
+}
+
+*/
