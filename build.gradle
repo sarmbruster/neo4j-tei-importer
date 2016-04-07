@@ -28,12 +28,12 @@ ext {
 }
 
 dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.6'
     compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion
-    compile group: 'org.neo4j', name: 'neo4j-common', version: neo4jVersion
     compile group: 'org.neo4j', name: 'neo4j-lucene-index', version: neo4jVersion
     compile group: 'org.neo4j', name: 'server-api', version: neo4jVersion
-    compile group: 'org.neo4j.app', name: 'neo4j-server', version: neo4jVersion
-    compile 'com.google.guava:guava:19.0'
+    compile "org.slf4j:slf4j-api:1.7.20"
+//    compile group: 'org.neo4j.app', name: 'neo4j-server', version: neo4jVersion
 
     testCompile group: 'org.neo4j.contrib', name: 'neo4j-spock-extension', version: '0.6.0'
 //    testCompile "org.neo4j.driver:neo4j-java-driver:$neo4jClientVersion"
@@ -46,7 +46,8 @@ group = "org.neo4j.extension.tei"
 
 shadowJar {
   dependencies {
-    include(dependency('org.glassfish.jersey.media:jersey-media-json-jackson'))
+    include(dependency('org.codehaus.groovy:groovy-all'))
+//    include(dependency('org.glassfish.jersey.media:jersey-media-json-jackson'))
   }
 }
 

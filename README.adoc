@@ -1,0 +1,31 @@
+# neo4j-tei-importer
+
+image::https://travis-ci.org/sarmbruster/neo4j-tei-importer.svg?branch=master[alt="Travis CI Status", link="https://travis-ci.org/sarmbruster/neo4j-tei-importer"]
+
+neo4j-tei-importer imports data from XML files using the http://www.tei-c.org[TEI] schema to a Neo4j database.
+
+
+## Installation
+
+This project uses http://www.gradle.org[gradle] as build system. Since the gradle wrapper in included, there is no need to download anything beforehand.
+
+To build the project just type:
+
+    ./gradlew shadowJar
+
+Copy (or symlink) the resulting file `./build/libs/neo4j-tei-importer-0.1-SNAPSHOT-all.jar` to Neo4j's `plugins` folder.
+
+Change configuration in `$NEO4J/conf/neo4j-server.properties`:
+
+    org.neo4j.server.thirdparty_jaxrs_classes=org.neo4j.extension.tei=/tei
+
+After a restart using `$NEO4J_HOME/bin/neo4j restart` the extension is ready to use.
+
+## Usage
+
+Using REST a XML TEI file can be imported by simple sending an HTTP PUT to REST endpoint http://host:7474/tei/import. E.g. via cURL:
+
+----
+curl [-u neo4j:<mypasswd>] -T src/test/resources/1667-09-23.xml http://localhost:7474/tei/import
+----
+
