@@ -1,0 +1,436 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="custom.xsl"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="de" xml:id="letter_26783">
+	<teiHeader>
+		<fileDesc>
+			<titleStmt>
+				<title>Wilhelm Langius an Stanislaus Lubienietzki [in Hamburg], Kopenhagen, 23.09.1667</title>
+				<respStmt>
+					<resp key="transcription"/><!-- annotation? -->
+					<name>Kęstutis Daugirdas</name>
+				</respStmt>
+				<respStmt>
+					<resp key="encoding"/>
+					<name>Michael Piotrowski</name>
+				</respStmt>
+			</titleStmt>
+			<publicationStmt>
+				<publisher>Leibniz-Institut für Europäische Geschichte</publisher>
+				<pubPlace>Mainz</pubPlace>
+				<date when="2015"/>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct><!-- überlegen, ob man Quellen nicht in einem Register führt, wenns immer wiederkehrende Publikationen sind?
+					Was ist mit Briefen, die nur als Handschrift vorliegen - oder gibts nur gedruckte? -->
+					<!-- Brief als solcher ist schon in correspDesc notiert, nicht zweimal kodieren -->
+					<monogr>
+						<title>Theatrum Cometicum</title>
+						<author>Stanislai de Lubienietski</author>
+						<imprint>
+							<date when="1681"/>
+						</imprint>
+						<biblScope unit="vol">1</biblScope>
+						<biblScope unit="pp" from="942" to="945"/>
+					</monogr>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+
+		<profileDesc>
+			<calendarDesc>
+				<calendar xml:id="julian_DK"><!-- unterscheidet sich der Julianische Kalender in Dänemark vom Julianischen Kalender an sich? Wenn nicht auf "julian" anpassen -->
+					<p>The Julian calendar, as used in 17th-century Denmark.</p>
+				</calendar>
+			</calendarDesc>
+			<correspDesc>
+				<correspAction type="sent">
+					<persName ref="#P007">Wilhelmus Langius</persName>
+					<placeName ref="#DK-CPH">Haunia</placeName>
+					<date when="1667-09-23"/>
+				</correspAction>
+				<correspAction type="received">
+					<persName ref="#P006">Stanislaus Lubienietzki</persName>
+					<placeName ref="#DE-HAM">Hamburgum</placeName>
+					<date notBefore="1667-09-23" notAfter="1667-10-04"/>
+				</correspAction>
+			</correspDesc>
+			<abstract>
+				<p>[1] Langius entschuldigt sich, dass er die Anfrage Lubienietzkis zu dem Kometen des Jahres 1664 verspätet beantwortet: 
+					Den Kometen habe er im ausgehenden Dezember 1664 und Anfang Januar 1665 im <name key="#Hya">Sternbild Hydra</name> beobachtet, und ein 
+					ähnliches Phänomen sei im ausgehenden März bzw. Anfang April in Pegasus und Andromeda erschienen. [2] In Anlehnung an Demokrit 
+					äußert Langius die Hypothese, dass Kometen aus Atompartikeln gebildet werden: Sie entstünden im Kegelschatten der Erde und 
+					würden erst dann sichtbar, wenn sie aus diesem hervor- und in das Licht der Sonne hineinträten. [3] Seine Hypothese 
+					veranschaulicht Langius mittels einer Zeichnung. [4] Er hält es für denkbar, dass Kometen auch um andere Planeten 
+					entstehen könnten. [5] Die Identität der Kometen nachzuweisen, sei kompliziert und nur bei Ausstattung mit guten 
+					Instrumenten möglich. [6] Langius lobt das Vorhaben Lubienietzkis, die Meinungen führender Astronomen zu dem Gegenstand 
+					einzuholen und zu veröffentlichen. [7] Er selbst kann die Ansicht, dass Kometen und Planeten keinen Einfluss auf das 
+					Menschenleben haben, vor allem dann nicht uneingeschränkt teilen, wenn sie biblisch begründet wird. [8] Astrologische 
+					Voraussagen hätten zwar mit vielen Unwägbarkeiten zu rechnen, aber sie seien von Claudius Ptolemaeus und Tycho Brahe 
+					für nicht prinzipiell unmöglich gehalten worden.
+				</p>
+			</abstract>
+			<!-- in ediarum würde particDesc über *zentrale* Register gepflegt werden.  
+				 Das Personenregister wäre dann aber eine listPerson ganz ähnlich wie hier. 
+			Vllt. dann im Antrag vermerken, dass particDesc dann am Ende zur Nachnutzung in den Dateien bereitgestellt wird,
+			 damit man sie solitär nutzen kann --> 
+			<particDesc>
+				<listPerson>
+					<person xml:id="P006">
+						<idno type="gnd">http://d-nb.info/gnd/119357100</idno>
+						<persName type="reg"><!-- reg: reguläre Schreibweise, "alt" für alternative Schreibung -->
+							<surname>Lubieniecki</surname>
+							<forename>Stanisław</forename>
+						</persName>
+					</person>
+
+					<person xml:id="P007">
+						<idno type="gnd">http://d-nb.info/gnd/124951775</idno>
+						<persName type="reg">
+							<surname>Lange</surname>
+							<forename>Villum</forename>
+						</persName>
+					</person>
+
+					<person xml:id="P001">
+						<idno type="gnd">http://d-nb.info/gnd/11852464X</idno>
+						<persName>
+							<forename>Democritus</forename>
+							<addName>Abderita</addName>
+						</persName>
+					</person>
+
+					<person xml:id="P002">
+						<idno type="gnd">http://d-nb.info/gnd/11765972X</idno>
+						<persName type="reg">
+							<surname>Chiaramonti</surname>
+							<forename>Scipione</forename>
+						</persName>
+						<note xml:lang="deu">Der Philosoph und Mathematiker Scipione Claramontius
+							(Chiaramonti, 1565–1652) war der Anhänger der traditionellen
+							Naturphilosophie des Aristoteles, die er nicht zuletzt gegen <name
+								ref="#P008">Johannes Kepler</name> und <name ref="#P009">Galileo
+								Galilei</name> verteidigte.</note>
+					</person>
+
+					<person xml:id="P003">
+						<idno type="gnd">http://d-nb.info/gnd/100499651</idno>
+						<persName type="reg">
+							<forename>Hipparchus</forename>
+							<addName>Nicaenus</addName>
+						</persName>
+					</person>
+
+					<person xml:id="P004">
+						<idno type="gnd">http://d-nb.info/gnd/118641786</idno>
+						<persName type="reg">
+							<surname>Ptolemaeus</surname>
+							<forename>Claudius</forename>
+						</persName>
+					</person>
+
+					<person xml:id="P005">
+						<idno type="gnd">http://d-nb.info/gnd/118514237</idno>
+						<persName type="reg">
+							<surname>Brahe</surname>
+							<forename>Tycho</forename>
+						</persName>
+					</person>
+
+					<person xml:id="P008">
+						<idno type="gnd">http://d-nb.info/gnd/118561448</idno>
+						<persName type="reg">
+							<surname>Kepler</surname>
+							<forename>Johannes</forename>
+						</persName>
+					</person>
+
+					<person xml:id="P009">
+						<idno type="gnd">http://d-nb.info/gnd/118561448</idno>
+						<persName type="reg">
+							<surname>Galilei</surname>
+							<forename>Galileo</forename>
+						</persName>
+					</person>
+				</listPerson>
+
+				<listOrg>
+					<org xml:id="O001">
+						<idno type="gnd">http://d-nb.info/gnd/36485-X</idno>
+						<orgName>Københavns Universitet</orgName>
+					</org>
+				</listOrg>
+			</particDesc>
+
+			<settingDesc>
+				<listPlace>
+					<place xml:id="DK-CPH">
+						<!-- placeName NACH idno validiert leider nicht, ist aber ein Bug in der TEI, siehe https://github.com/TEIC/TEI/issues/1424 -->
+						<placeName type="reg">Kopenhagen</placeName>
+						<idno type="gnd">http://d-nb.info/gnd/124951775</idno>
+					</place>
+
+					<place xml:id="DE-HAM">
+						<placeName type="reg">Hamburg</placeName>
+						<idno type="gnd">http://d-nb.info/gnd/4023118-5</idno>
+					</place>
+
+					<place xml:id="R001"><!-- type würde ich weglassen, wenn nicht unbedingt benötigt. Kann auch über GeoNames bezogen werden -->
+						<placeName type="reg">Nordjütland</placeName>
+						<idno type="gnd">http://d-nb.info/gnd/4075466-2</idno>
+						<idno type="geonames">http://www.geonames.org/2616135/</idno>
+						<!-- meine Empfehlung: immer auch GeoNames angeben; hat nach unsereren Erfahrungen hier ein bessere Abdeckung als man denkt -->
+					</place>
+					<!-- Planeten, Sternbilder etc. würde ich nicht als place kodieren, sondern in textClass/keywords als itemlist
+					 würde dann ebenfalls  in ediarum in einer zentralen Registerdatei gepflegt und fast genauso kodiert (nur dann als list in body natürlich-->
+				</listPlace>
+			</settingDesc>
+			<textClass>
+				<keywords>
+					<list>
+						<item xml:id="C_1664_W1">
+							<idno type="iau">C/1664 W1</idno><!-- Sehr gut, ich würde IAU Names aber für alle astronomischen Objekte eintragen! -->
+							<label>C/1664 W1</label>
+							<rs type="objectType" key="astro_comet"/>
+						</item>
+						<item xml:id="Terra">
+							<idno type="gnd">http://d-nb.info/gnd/4015139-6</idno>
+							<label>Terra</label>
+							<rs type="objectType" key="astro_planet"/>
+						</item>
+						<item xml:id="Venus">
+							<idno type="gnd">http://d-nb.info/gnd/4062527-8</idno>
+							<label>Venus</label>
+							<rs type="objectType" key="astro_planet"/>
+						</item>
+						
+						<item xml:id="Luna">
+							<idno type="gnd">http://d-nb.info/gnd/4040037-2</idno>
+							<label>Luna</label>
+							<rs type="objectType" key="astro_planet"/>
+						</item>
+						
+						<item xml:id="Sol">
+							<idno type="gnd">http://d-nb.info/gnd/4055562-8</idno>
+							<label>Sol</label>
+							<rs type="objectType" key="astro_planet"/>
+						</item>
+						
+						<item xml:id="Hya">
+							<idno type="iau">Hya</idno>
+							<label>Hydra</label>
+							<rs type="objectType" key="astro_planet"/>
+						</item>
+						
+						<item xml:id="And">
+							<idno type="iau">And</idno>
+							<label>Andromeda</label>
+							<rs type="objectType" key="astro_constallation"/>
+						</item>
+						
+						<item xml:id="Peg">
+							<idno type="iau">Peg</idno>
+							<label>Pegasus</label>
+							<rs type="objectType" key="astro_constallation"/>
+						</item>
+					</list>
+				</keywords>
+			</textClass>
+		</profileDesc>
+	</teiHeader>
+	<text>
+		<body xml:lang="lat">
+			<!-- [TheaCom I, 942] -->
+			<!-- FRAGE: Wie oft soll im Text "Sol" etc. getaggt werden, erscheint mir vllt. bisschen viel? 
+				Vllt. pro Absatz oder Seite einmal? -->
+			<pb ed="#TheaCom" n="942" facs="942.JPG"/><!-- ohne Pfad, weiß man ja vorher oft nicht -->
+			<opener>
+				<dateline>
+					<!-- bei names ist @key ein interner Identifier, @ref sollte immer eine URI/URL sein, entweder auf eigene Ressource oder direkt
+						auf GND o.ä. -->
+					<placeName key="#DK-CPH">Haunia</placeName>
+					<placeName key="#DE-HAM">Hamburgum</placeName>
+					<date when="1667-09-23">XIII. Sept. III. Zygonos Anno Christianorum communi
+						MDCLXVII</date>. </dateline>
+			</opener>
+			<head>Nobili viro <persName key="#P006">Stanislao Lubienietzki</persName>, <persName key="#P007"
+				>Wilhelmus Langius</persName> S. P. D.</head>
+
+			<p>Quod toties abs te sententiam rogatus de cometis anni ineuntis MIↃCLXV. nondum
+				responderim, in causa est, quod ex quo primae tuae literae mihi heic sunt redditae,
+				tot negociis occupatus fuerim, ut vix tantillum temporis residuum habuerim, quo
+				literas ad te perscriberem, nedum rem tanti momenti ea, qua par est, diligentia
+				atque attentione expenderem, praesertim heic <placeName key="#DK-CPH"
+					>Hauniae</placeName>, ubi neque schedas meas neque suppellectilem librariam ad
+				manus habeo. Memini quidem ineunte <date>mense Decembri anno MIↃCXLXIV.</date> nocte
+				circa 2. horam me <rs key="#C_1664_W1">cometam</rs> vidisse subobscurum, caudam
+				longam proicientem circa craterem in <w xml:id="w001">Angue</w><!-- w ist eher linguistisch gedacht, generell gibt es aber für Sachkommentare 
+				nur wenig in der TEI. Das DTA-Basisforma benutzt ref -->,<note target="#w001"
+					xml:lang="deu">Gemeint ist das Sternzeichen <name key="#Hya"
+					>Hydra</name>.</note> cujus situm ad fixas, extensione filari contuli <date>XI.
+					et XII. Decembris</date>. Post aliquot dies, quibus caelum mihi non favit,
+				rursum <rs key="#C_1664_W1">cometam</rs> vidi <date>XXII. mensis Dec.</date><!-- Wenn date dann auch in @when etc. auflösen?? -->
+				vesperi, crinitum, nullam tum caudam proicientem, quantum quidem visu dignoscere
+				potui, nisi forte splendor <name key="#Luna">Lunae</name> minus lumen obfuscaverit.
+				Silente enim <name key="#Luna">Luna</name> vesperi natalis Domini <date>XXV.
+					Dec.</date> cauda satis clare perspiciebatur, sicut et sequentibus noctibus ante
+				lunae exortum, quibus etiam cum fixis a me collatus fuit, quantum quidem per nubes
+				licuit. Neque enim ulla mihi instrumenta astronomica ad manum fuere, quibus aliquid
+				certi, in re tam ardua inquirerem, sed talibus observationibus <foreign
+					xml:lang="grc">ὁλοχερέστερον</foreign> acceptis acquiescendum fuit, ut motum
+				cometae utcunque colligerem. Atque ex istis observationibus haud aliud tum
+				concludere potui, quantum quidem nunc memoria teneo, quam cometam circa initium anni
+				MIↃCLXV. aliam viam ingressum, magis directo motum versus Septentriones tetendisse,
+				quod tamen schedis meis destitutus pro certo affirmare nolim. Post <date>X. mensis
+					Januarii</date> cometes a me visuis non fuit, quamvis sub exitum Januarii et
+				initium Febr. aliquoties quaesitus. Mense vero Martio exeunte et sub initium Aprilis
+				iterum cometes apparuit, inter quadratum <name key="#Peg">Pegasi</name> et <name
+					key="#And">Andromedam</name>, an idem cum priore, an alius ab hoc diversus, haud
+				facile dixerim.</p>
+
+			<p>Si quis enim conjecturae locus, quam in corporum physicorum generatione et
+				dissolutione explicanda vix quisquam reiecerit, existimo cometas ex colluvie
+				diversarum partium generari, quas <persName key="#P001">Democritus</persName>, quique eam
+				sectam sequuntur, atomos dixere, ac tamdiu intra conum telluris umbrosum latere,
+				usquedum magnis auctibus auctus moveri incipit elapsusque umbra, <name key="#Sol"
+					>Solis</name> radiis illustris, oculis se hominum conspiciendum exhibet. Atque
+				ita quo vis, impellens protrudit, movetur: usque dum solutis compagibus particulae
+				componentes dissipantur. Pro partium vero componentium situ, tam juxta longitudinem
+				et latitudinem, quam juxta densitatem et raritatem, varii colores variaeque figurae
+				in cometis apparent. Et si quando partes vel magis postmodum condensatur, vel
+				superficies laevigantur, majori splendore coruscant, haud aliter, quam si <name
+					ref="#Sol">Solis</name> radii in corpus densum laevumque inciderent. Quod si
+				forte cometes vel in conum <name key="#Terra">Terrae</name> umbrosum vel sub radios
+					<name key="#Sol">Solis</name> rursum incidat; demum occultatur, usque dum radiis
+				liber, demum appareat, nisi antea dissol-<pb n="943" facs="943.JPG"/>vatur.
+				Atque ex his liquet nil certi in hac quaestione affirmari posse, pluresne an unus
+				cometa praedicto anno fulserit, nisi multae accuratae observationes locis longe
+				dissitis acceptae diligenter examinentur, ut distantia cometae ab <name key="#Terra"
+					>Terra</name> locusque secundum longitudinem et latitudinem habeatur atque inde
+				sciatur, an cometes perierit, an vero radiis vel <name key="#Sol">Solis</name> vel
+				telluris immersus lateat. Si enim talem situm in aethere habere deprehendatur, ut
+				ita oculis latere potuerit, et cometes postea fulserit, credi potest veterem cometem
+				denuo apparere. Quod si vero nec <name key="#Sol">Solis</name> radiis nec telluris
+				umbra tum occultari cometes potuerit, haud video, quid aliud dicendum sit, quam
+				cometam periisse.</p>
+
+			<p>Quod ut clarius explicem figuram hanc apponere volui, <!-- Graphik --> in qua A.
+				hemisphaera <name key="#Sol">Solis</name>, B. globus <name key="#Terra"
+					>Terrae</name>, C. <name key="#Luna">Lunae</name>, MHL conus terrae umbrosus,
+				IMKL pars coni lucidi <name key="#Sol">Solis</name> terram illustrans. Posito jam
+				cometam in E generari eaque distantia a <name key="#Terra">Terra</name> remotum, ut
+				rotatione diuturna non circumagatur et tamen motu majoris orbis, quae <name
+					key="#Luna">Lunam</name> una cum tellure in mago circulo annuo circa <name
+					key="#Sol">Solem</name> rotat, circumferatur: erit cometa omnino invisibilis
+				(nisi in se ipso aliquid luminis habuerit) usquemdum calore, spiritus aliove
+				principio movente impulsus, extra lineam MH vel LH elabatur: quo tempore statim a
+					<name key="#Sol">Sole</name> illuminatur <name key="#Terra">Terrae</name>que
+				incolis se conspiciendum praebet. Et quamdium extra MH vel LH fuerit, semper
+				apparet, nisi vel dissolvatur, vel ultra <name key="#Luna">Lunam</name> aliosve
+				planetas ascendens, eorum obtentu occultetur: vel denique magnam circuli partem
+				emensus, intra lineam IM aut KL se recipiat <name key="#Sol">Solis</name>que radiis
+				obfuscetur.</p>
+
+			<p>Quod autem cometam circa <name key="#Terra">Terram</name> generari supponam, non eo
+				dictum velim, quod negem circa <name key="#Luna">Lunam</name> aut <name key="#Venus"
+					>Venerem</name> aliosve planetas aeque cometas aliave nova phoenomena generari
+				posse. <name key="#Sol">Solem</name> enim ex corpore suo magna crassaque effluvia
+				emittere maculae solares docent: quod de reliquis planetis vix quisqiam negaverit.
+				Quis enim naturae vires aut omnipotentis Dei manum certis limitibus
+				circrumscripserit? Aut quis contraria demonstraverit vel unquam demonstrare potis
+				est? Si enim <persName key="#P002">Claremontio</persName> concedatur varias observationes,
+				quae in India aliisque dissitis locis sunt factae, et Tychonicis aliorumque
+				insignium artificium observatis non conveniunt, probas tamen bonasque esse: quis
+				inde concluderet, stellam <persName key="#P003">Hipparcho</persName> aevo visam, novam non
+				fuisse? Aut in superiori aethere ultra <name key="#Luna">Lunam</name> non fuisse
+				enatam? <note><persName key="#P002">Claramontius</persName> versuchte in der von <persName
+						key="#P007">Wilhelm Langius</persName> anvisierten, gegen <persName key="#P005"
+						>Tycho Brahe</persName> gerichteten Schrift <bibl
+						sameAs="http://www.worldcat.org/oclc/492678510">Antitycho</bibl><!-- Worldcat kann man machen, aber unsere Editionen führen immer
+							eigene Register (wie Personen, Orte) und eben auch für Publikationen. Nicht alles ist zwangsläufig irgendwo referenzierbar. --> (1621) zu
+					beweisen, dass die Kometen sublunare und keine himmlischen Erscheinungen
+					seien.</note> Et quis errorem unius duorumve minutorum, imo quatuor et plurium
+				in instrumentis mobilibus ejuraverit? Quis aëris eandem raritatem aut densitatem in
+				tam dissitis locis praestiterit vel differentiam debita diligentia notaverit? Et
+				hinc tamen non unius tantum minuti error, sed et major aliquanto pro locorum
+				diversitate et aëris mutatione suboritur: unde phoenomenon parallaxis plurimum
+				mutatur.</p>
+
+			<p>Subtilis ergo disquisitionis res est et, nisi observationes summa diligentia et
+				attentione peragantur loco, tempore atque instrumentis idoneis, vix certae
+				probationes, nedum observationes illis inaedificari possunt. Ac mihi quidem nullas
+				ejusmodi observationes licuit, instrumentis commodis destituto, neque tempus otiumve
+				eas examinandi suppetit, quas ad me misisti. Totos enim dies juris in supremo hoc
+				regni tribunali, administrationi impen-<pb n="944" facs="944.JPG"/>dere, ex
+				officii ratione cogor,<note><persName key="#P007">Langius</persName>, der 1650 bis 1656 als
+					Professor für Mathematik an der <placeName key="#O001">Universität zu
+						Kopenhagen</placeName> fungierte, spielt auf seine aktuellen Verpflichtungen als
+					Landrichter in <placeName key="#R001">Nordjütland</placeName> an.</note> et quod residuum
+				valetudinis curae tribuendum est, ita ut accurato calculo observationes hasce
+				expendere atque invicem conferre tempus minime permittat. Tria enim quaerenda sunt.
+				Primum an cometa usquam terrarum binis observatoribus debitis instrumentis magna
+				distantia sub eodem meridiano sit observatus. Si hoc non datur, videndum, an sub
+				diversis meridianis eodem temporis momento aliqua sit facta. Quod si neque illud
+				habeatur, reducendae sunt observationes, quantum quidem fieri potest, ad idem
+				tempus. Quod quantis difficultatibus quantaeque incertitudini sit obnoxium, nemo
+				horum rerum peritus ignoraverit. Absque hisce datis, haud video, quid de phoenomeni
+				ab terris distantia concludi certo possit, qua ignota, ex data longitudine et
+				latitudine prius problema explicari nequit, adeoque ex istis principiis nihil
+				definiri, novus ne, an vetus cometa fulgeat. Fateor quidem si certis observationibus
+				constaret cometam continuo visum usque ad mensem Aprilem, non amplius dubitari posse
+				unum eundemque fuisse. Quoniam vero nihil tale mihi cognitum est, neque pro certo
+				affirmare possum vel eundem fuisse vel alium ab eo diversum.</p>
+
+			<p>Conatus quidem tuos, doctissime Lubienietzki, nemo satis laudaverit, quod tam pulchro
+				ac nobili instituto tot praestantium artificium observata collegeris, sed optandum
+				ea tam egregiis hominibus adminicula ad manum fuisse vel adhuc esse, quibus et suae
+				et aliorum expectationi satisfacerent. Persuasum enim habeo rem astronomicam nulla
+				alia via facilius feliciusque restitui perificive posse, quam si tam clari viri
+				commodis organis coelum variis in locis scrutarentur suaque inventa invicem
+				communicarent. Verum haec pluribus persequi ocium non est.</p>
+
+			<p>Quod vero de effectibus cometarum proponis, video magnis id nunc viris probari, ut
+				astrologicis praedictionibus parum, imo nihil fere tribuant; sed an id simpliciter
+				recipiendum sit, nondum video. Argumenta, quae pro hac sententia adducuntur, mihi
+				non tam firma videntur, ut assensum extorqueant. Quae enim ex scripturis citantur,
+				nescio an huc faciant. Multa Judaeis vetita, quae Christianos non obligant. Et quis
+				inter Christianos astrologus unquam negavit Deum naturae vim immutare atque inhibere
+				quando libet adeoque sapientissimorum Chaldaeorum et astrologorum Babyloniae
+				praedictorum irritas reddere, non secus ac prudentissimorum Babylonis politicorum
+				consilia. <s xml:id="s001">Nam utrumque hoc propheta loco laudato reicit.</s><note
+					target="#s001"><persName ref="#P007">Langius</persName> hat <ref type="bible"
+						cRef="Jes 47,13f">Jes 47,13f</ref> vor Augen.</note> Nec tamen ideo civilis
+				sapientia est damnanda, quod Dei omnipotente manu confundatur, adeoque nec de
+				astrologia argumentum hoc valet. Quis autem divinae potentiae quidquam detraxerit
+				praedicens hominem epoto mercurii sublimati aquis misti poculo intra horae spacium
+				moriturum. Et tamen causas huius rei (cur mercurius sublimatus tam perniciter
+				occidat, cum non sublimatus innoxie propinetur) non multo clarius quisquam
+				demonstraverit quam quae in astrologicis de planetarum in tali situ effectibus
+				traduntur.</p>
+
+			<p>Fateor majoris difficultatis esse, effectus astrologicos quam medicos explorare.
+				Magnae quoque mutationes ex locorum aërisque dispositione, corporum recipientium
+				qualitate variisque aliis accidentibus causantur. Sic multa hominibus perniciosa
+				aliis animantibus sunt innoxia, et multa brutis noxia hominem non laedunt. Quaedam
+				venena in quibusdam locis exitiosa, alibi vix ullas vires exserunt. Antidotis quoque
+				alexipharmacis plurima curantur, quae sine his interficerent. Ita etiam in
+				effectibus astrorum multa intervenire possunt, quo minus vel non agant vel non
+				solito <choice>
+					<corr>more</corr>
+					<sic>mone</sic>
+				</choice> agant. Unde non mirum astrologicas praedictiones saepe fallaces esse, cum
+				piorum hominum preces, vitae institutum aliaque plurima astrorum influentiam mutent.
+				Et tamen multa tam ex veteri quam nova historia adduci possunt hanc artem
+				confirmantia, ut has aliasque ob causas magnis astronomis <persName key="#P004"
+					>Ptolemaeo</persName> et <persName key="#P005">Tychoni</persName> artem hanc non
+				displicuisse constet. Quos si astrologi aliquando gravius peccant, non arti id vitio
+				vertendum, sed artificibus: sicut nemo medicorum errata medicinae impegerit. Atque
+				haec sunt, clarissime <pb n="945" facs="945.JPG"/><persName key="#P006"
+					>Lubienietzki</persName>, quae doctissimis tuis literis respondere potui, in quibus
+				si quidquam fuerit tibi acceptum, mihi perquam erit gratum; sin minus, ignoscas
+				tempori atque occupationibus meis, quod omnia tam accurate examinare ac perscribere
+				nequeam. Ea vero, quae hac in re cognita mihi sunt, candide atque ea, quae doctos
+				homines decet, libertate Tecum communicavi. Vale bonisque rebus vitam bonasque horas
+				impendere perge.</p>
+		</body>
+	</text>
+</TEI>
