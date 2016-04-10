@@ -36,6 +36,8 @@ curl [-u neo4j:<mypasswd>] -T src/test/resources/1667-09-23.xml http://localhost
 Additionally it's possible to omit the payload in the PUT request and specify the URL location of the document via
 url request parameter. Be aware to supply the url in urlencoded variant:
 
----
+----
 curl [-u neo4j:<mypasswd>] -X PUT http://localhost:7474/tei/import?url=http%3A%2F%2Fmyhost%2Fabc.xml
----
+----
+
+
