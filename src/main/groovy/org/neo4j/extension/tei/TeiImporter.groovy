@@ -157,10 +157,13 @@ class TeiImporter {
                 return thisNode
             }
         } else {
-            Node thisNode = createChildNodeOf(parent, Labels.Text)
-            thisNode.setProperty("text", xml)
-            currentEndOfChain.createRelationshipTo(thisNode, RelationshipTypes.NEXT)
-            currentEndOfChain = thisNode
+            Node thisNode
+            for (word in xml.tokenize() ) {
+                thisNode = createChildNodeOf(parent, Labels.Word)
+                thisNode.setProperty("text", word)
+                currentEndOfChain.createRelationshipTo(thisNode, RelationshipTypes.NEXT)
+                currentEndOfChain = thisNode
+            }
             return thisNode
         }
     }

@@ -46,7 +46,7 @@ class ImportSpec extends Specification {
         def cut = new TeiImporter(graphDatabaseService: graphDatabaseService)
 
         when:
-        cut.importXml(this.class.getResourceAsStream("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"))
+        cut.importXml(this.class.getResourceAsStream("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"), null)
 
         then:
         true

@@ -11,7 +11,7 @@ public enum Labels implements Label {
     Place,
     Source, // "Quelle"
     Reference, // allg. Referenzknoten
-    Text,
+    Word,
     Tag
 
 }
