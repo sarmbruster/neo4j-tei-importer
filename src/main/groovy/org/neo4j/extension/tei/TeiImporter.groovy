@@ -1,6 +1,7 @@
 package org.neo4j.extension.tei
 
 import groovy.util.logging.Slf4j
+import groovy.util.slurpersupport.NodeChild
 import org.neo4j.graphdb.DynamicLabel
 import org.neo4j.graphdb.DynamicRelationshipType
 import org.neo4j.graphdb.GraphDatabaseService
@@ -41,10 +42,17 @@ class TeiImporter {
             for (tag in tei.teiHeader.profileDesc.settingDesc.listPlace.'*') {
                 mergeReferenceNode(tag)
             }
+            for (tag in tei.teiHeader.profileDesc.textClass.keywords.list.'*') {
+                mergeReferenceNode(tag)
+            }
 
             Node source = graphDatabaseService.createNode(Labels.Source)
             source.setProperty("title", tei.teiHeader.fileDesc.titleStmt.title.text())
             currentEndOfChain = source
+
+            for (tag in tei.teiHeader.profileDesc.correspDesc.'*') {
+                setCorrespAction(source, tag)
+            }
 
             def bodyChildren = tei.text.body.childNodes()
 
@@ -60,7 +68,31 @@ class TeiImporter {
         }
     }
 
-    /**
+    def setCorrespAction(Node sourceNode, NodeChild xml) {
+
+        String relType = xml.'@type'.text().toUpperCase()
+        assert relType
+
+        Node hyperEdge = graphDatabaseService.createNode()
+        def rel = sourceNode.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName(relType))
+
+        for (tag in xml.children()) {
+
+            def ref = tag.@ref.text()
+            if (ref) {
+
+                ref = ref[1..-1] // strip off leading "#"
+
+                assert nodeReferences[ref] : "no reference node for $ref found"
+
+                hyperEdge.createRelationshipTo(nodeReferences[ref], DynamicRelationshipType.withName(tag.name().toUpperCase()))
+            } else if (tag.name() == 'date') {
+                // set all date properties
+                tag.attributes().each {k,v -> rel.setProperty(k,v)}
+            }
+        }
+    }
+/**
      *
      * @param parent
      * @param previous
@@ -129,24 +161,28 @@ class TeiImporter {
     }
 
     void mergeReferenceNode(def xml) {
-        // pick first idno as "unique identifier"
+        // pick it attribute "unique identifier"
         // TODO: validate if this assumtion is ok
-        def idno = xml.idno[0].text()
+
+        String id = xml.'@xml:id'.text()
+        assert id
         Label label = DynamicLabel.label( toUpperCamelCase(xml.name()))
-        def node = graphDatabaseService.findNode(label, "idno", idno)
+        def node = graphDatabaseService.findNode(label, "id", id)
         if (node == null) {
             node = graphDatabaseService.createNode(label)
-            node.setProperty("idno", idno)
-            nodeReferences[xml.'@xml:id'.text()] = node
+            node.setProperty("id", id)
+            nodeReferences[id] = node
 
+/*
             String typeAttr = xml.'@type'.text()
             if (typeAttr) {
                 node.addLabel(DynamicLabel.label(typeAttr))
             }
+*/
 
             // extract xml tags holding node properties
             def props = xml.'**'.grep {
-                if (it.name() in ["idno", "p"]) return false // blacklisted tags
+                if (it.name() in ["note"]) return false // TODO: for now, we ignore notes on reference points
 
                 if (it.localText().size() > 1) {
                     throw new RuntimeException("dunno how to handle $xml - tag ${it.name()} has multiple values")
