@@ -11,6 +11,7 @@ import org.neo4j.graphdb.RelationshipType
 
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
+import javax.ws.rs.QueryParam
 import javax.ws.rs.core.Context
 
 /**
@@ -28,8 +29,18 @@ class TeiImporter {
     // during import text nodes are connected by :NEXT relationships. This one keeps track of current end of the chain
     Node currentEndOfChain
 
+    /**
+     * @param inputStream if url is not given, we import the uploaded file
+     * @param url if given, we fetch from this url
+     */
     @PUT
-    void importXml(InputStream inputStream) {
+    void importXml(InputStream inputStream, @QueryParam("url") URL url) {
+
+        if (url) {
+            log.info "fetch url $url"
+            inputStream = url.newInputStream()
+        }
+
         withTransaction {
             def tei = new XmlSlurper().parse(inputStream)
 

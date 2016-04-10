@@ -2,10 +2,8 @@ package org.neo4j.extension.tei
 
 import org.junit.Rule
 import org.neo4j.extension.spock.Neo4jResource
-import org.neo4j.extension.spock.Neo4jUtils
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
-import org.neo4j.tooling.GlobalGraphOperations
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -24,7 +22,7 @@ class ImportSpec extends Specification {
         def cut = new TeiImporter(graphDatabaseService: graphDatabaseService)
 
         when:
-        def result = cut.importXml(this.class.getResourceAsStream("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"))
+        def result = cut.importXml(this.class.getResourceAsStream("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"), null)
 
         then:
         true

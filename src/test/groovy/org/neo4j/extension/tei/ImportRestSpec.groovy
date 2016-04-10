@@ -1,10 +1,9 @@
 package org.neo4j.extension.tei
 
 import com.sun.jersey.api.client.UniformInterfaceException
-import org.junit.ClassRule
+import org.junit.Rule
 import org.neo4j.extension.spock.Neo4jServerResource
 import org.neo4j.test.server.HTTP
-import spock.lang.Shared
 import spock.lang.Specification
 
 /**
@@ -12,21 +11,34 @@ import spock.lang.Specification
  */
 class ImportRestSpec extends Specification {
 
-    @Shared
-    @ClassRule
+    @Delegate
+    @Rule
     Neo4jServerResource neo4j = new Neo4jServerResource(
             thirdPartyJaxRsPackages: [
                     "org.neo4j.extension.tei": "/tei",
             ]
     )
+    def testResource = this.class.getResource("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml")
 
     def "upload a file"() {
         when:
-        def response = neo4j.http.PUT("tei/import", HTTP.RawPayload.rawPayload(this.class.getResource("/1667-09-23.xml").text))
+        def response = neo4j.http.PUT("tei/import", HTTP.RawPayload.rawPayload(testResource.text))
 
         then:
         def e = thrown(UniformInterfaceException)  // HTTP 204 (empty response) throws and exception
         e.response.status == 204
     }
+
+    def "import a file by url reference"() {
+        when:
+        def urlEncodedUrl = URLEncoder.encode(testResource.toString(), "UTF-8")
+        def response = neo4j.http.PUT("tei/import?url=${ urlEncodedUrl}")
+
+        then:
+        def e = thrown(UniformInterfaceException)  // HTTP 204 (empty response) throws and exception
+        e.response.status == 204
+    }
+
+
 
 }
