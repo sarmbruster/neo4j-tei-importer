@@ -1,13 +1,13 @@
 package org.neo4j.extension.tei
 
 import groovy.util.logging.Slf4j
-import groovy.util.slurpersupport.NodeChild
 import org.neo4j.graphdb.DynamicLabel
 import org.neo4j.graphdb.DynamicRelationshipType
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.Node
 import org.neo4j.graphdb.RelationshipType
+import org.neo4j.helpers.Triplet
 
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
@@ -25,6 +25,7 @@ class TeiImporter {
     GraphDatabaseService graphDatabaseService
 
     Map<String, Node> nodeReferences = [:]
+    def xmlns = new groovy.xml.Namespace("http://www.w3.org/XML/1998/namespace", "xml")
 
     // during import text nodes are connected by :NEXT relationships. This one keeps track of current end of the chain
     Node currentEndOfChain
@@ -42,7 +43,9 @@ class TeiImporter {
         }
 
         withTransaction {
-            def tei = new XmlSlurper().parse(inputStream)
+            def tei = new XmlParser().parse(inputStream)
+
+//            def tei = new XmlSlurper().parse(inputStream)
 
             for (tag in tei.teiHeader.profileDesc.particDesc.listPerson.'*') {
                 mergeReferenceNode(tag)
@@ -65,23 +68,94 @@ class TeiImporter {
                 setCorrespAction(source, tag)
             }
 
-            def bodyChildren = tei.text.body.childNodes()
+            // abstract
+            def abstr = tei.teiHeader.profileDesc.abstract
+            assert abstr.size() == 1
+            addDocumentContentsRecursively(abstr[0], source, RelationshipTypes.HAS_ABSTRACT, null)
 
-            def firstChild = bodyChildren.next()
-            assert firstChild.name() == "pb"
+            // complete text
+            addDocumentContentsRecursively(tei.text.body[0], source, RelationshipTypes.HAS_BODY, null)
 
-            def secondChild = bodyChildren.next()
-            assert secondChild.name() == "opener"
-
-            for (child in bodyChildren) {
-                addDocumentContentsRecursively(source, child)
-            }
         }
     }
 
-    def setCorrespAction(Node sourceNode, NodeChild xml) {
+    /**
+     *
+     * @param xml the current xml tag
+     * @param parent
+     * @param parentRelType
+     * @param currentEndOfChain
+     * @return a triplet of [ firstChildNode, lastChildNode, currentEndOfChain ]
+     */
+    private Triplet<Node, Node, Node> addDocumentContentsRecursively(def xml, Node parent, RelationshipType parentRelType, Node currentEndOfChain) {
+        switch (xml) {
+            case groovy.util.Node:  // we're on a tag (and not on a text node of xml document)
 
-        String relType = xml.'@type'.text().toUpperCase()
+                def referencedNode = findReferencedNodeForTag(xml)
+                if (referencedNode) {
+                    Node first, last
+                    for (child in xml.children()) {
+                        def triplet = addDocumentContentsRecursively(child, parent, RelationshipTypes.IS_PARENT_OF, currentEndOfChain)
+                        currentEndOfChain = triplet.third()
+                        if (first == null) {
+                            first = triplet.first()
+                        }
+                        last = triplet.second()
+                    }
+
+                    // create reference rels
+                    def hyperEdge = graphDatabaseService.createNode()
+                    def relTypeName = "REF_" + xml.name().localPart.toUpperCase()
+
+                    // the hyperedge node is connected via REF_<tagname> relationship to the referenced "thing" (person, place, item,...)
+                    hyperEdge.createRelationshipTo(referencedNode, DynamicRelationshipType.withName(relTypeName))
+
+                    // for first and last word point to the hyperedge using REF_<tagname>_START and REF_<tagname>_END relationships
+                    // in most cases first and last will be the same node, but there might be references spawning over multiple words
+                    first.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_START"))
+                    last.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_END"))
+
+                    return Triplet.of(first, last, currentEndOfChain)
+                } else { // a regular tag (aka not a reference): create a node for this tag and continue recursively for children
+                    Node node = graphDatabaseService.createNode(Labels.Tag)
+                    String tagName = xml.name().localPart
+                    node.setProperty("name", tagName)
+                    parent.createRelationshipTo(node, parentRelType)
+                    for (child in xml.children()) {
+                        def triplet = addDocumentContentsRecursively(child, node, RelationshipTypes.IS_PARENT_OF, currentEndOfChain ?: node)
+                        currentEndOfChain = triplet.third()
+                    }
+                    return Triplet.of(node, node, currentEndOfChain)
+                }
+                break
+            case String: // we've hit text part, so create a node for every word and connect them via :NEXT
+                Node first, last
+                for (word in xml.tokenize() ) {
+                    last = createChildNodeOf(parent, Labels.Word)
+                    last.setProperty("text", word)
+                    currentEndOfChain.createRelationshipTo(last, RelationshipTypes.NEXT)
+                    currentEndOfChain = last
+                    if (first ==null) {
+                        first = last
+                    }
+                }
+                return Triplet.of(first, last, currentEndOfChain)
+                break
+
+            default:
+                throw new UnsupportedOperationException(xml.getClass().getName())
+
+        }
+    }
+
+    private Node findReferencedNodeForTag(def xml) {
+        String refAttribute = xml.'@ref'  ?: xml.'@key'  // references in abstract use "ref" attribute, in full text "key" is used
+        refAttribute ? nodeReferences[refAttribute[1..-1]] : null  // skip 1st character, e.g. #P007 -> P007
+    }
+
+    def setCorrespAction(Node sourceNode, groovy.util.Node xml) {
+
+        String relType = xml.'@type'.toUpperCase()
         assert relType
 
         Node hyperEdge = graphDatabaseService.createNode()
@@ -89,88 +163,22 @@ class TeiImporter {
 
         for (tag in xml.children()) {
 
-            def ref = tag.@ref.text()
+            def tagName = tag.name().localPart
+            def ref = tag.@ref
             if (ref) {
-
                 ref = ref[1..-1] // strip off leading "#"
-
                 assert nodeReferences[ref] : "no reference node for $ref found"
-
-                hyperEdge.createRelationshipTo(nodeReferences[ref], DynamicRelationshipType.withName(tag.name().toUpperCase()))
-            } else if (tag.name() == 'date') {
+                hyperEdge.createRelationshipTo(nodeReferences[ref], DynamicRelationshipType.withName(tagName.toUpperCase()))
+            } else if (tagName == 'date') {
                 // set all date properties
                 tag.attributes().each {k,v -> rel.setProperty(k,v)}
             }
         }
     }
-/**
-     *
-     * @param parent
-     * @param previous
-     * @param reference
-     * @param refType
-     * @param xml either a String or a groovy.util.sluprersupport.Node
-     * @return the node created for this xml element
-     */
-    private Node addDocumentContentsRecursively(Node parent, def xml, Node reference=null, RelationshipType refType=null ) {
-        if (xml instanceof groovy.util.slurpersupport.Node) {
-            String ref = xml.attributes().ref
-            if (ref) {
-
-                Node target
-                if (ref.startsWith("#")) {
-                    ref = ref[1..-1]   // remove leading "#"
-                    target = nodeReferences[ref]
-                } else {
-                    target = graphDatabaseService.findNode(Labels.Reference, "ref", ref)
-                    if (target==null) {
-                        target = graphDatabaseService.createNode(Labels.Reference)
-                        target.setProperty("ref", ref)
-                    }
-                }
-
-                assert target
-
-                // enable this to have intermediate nodes for references allowing for start and end relationsships
-//                Node referenceNode = graphDatabaseService.createNode()
-//                referenceNode.createRelationshipTo(target, DynamicRelationshipType.withName("REF_${xml.name().toUpperCase()}"))
-
-                Node firstChild, lastChild
-                for(child in xml.children() ) {
-                    lastChild = addDocumentContentsRecursively(parent,  child )
-                    if (firstChild==null) {
-                        firstChild = lastChild
-                    }
-                }
-                assert firstChild == lastChild
-
-                firstChild.createRelationshipTo(target, DynamicRelationshipType.withName("REF_${xml.name().toUpperCase()}"))
-//                firstChild.createRelationshipTo(referenceNode, DynamicRelationshipType.withName("REF_${xml.name().toUpperCase()}_START"))
-//                lastChild.createRelationshipTo(referenceNode, DynamicRelationshipType.withName("REF_${xml.name().toUpperCase()}_END"))
-                return parent
-            } else {
-                Node thisNode = createChildNodeOf(parent, Labels.Tag)
-                thisNode.setProperty("tagName", xml.name())
-                for(child in xml.children() ) {
-                    addDocumentContentsRecursively(thisNode,  child )
-                }
-                return thisNode
-            }
-        } else {
-            Node thisNode
-            for (word in xml.tokenize() ) {
-                thisNode = createChildNodeOf(parent, Labels.Word)
-                thisNode.setProperty("text", word)
-                currentEndOfChain.createRelationshipTo(thisNode, RelationshipTypes.NEXT)
-                currentEndOfChain = thisNode
-            }
-            return thisNode
-        }
-    }
 
     private Node createChildNodeOf(Node parent, Label... labels) {
         Node thisNode = graphDatabaseService.createNode(labels)
-        thisNode.createRelationshipTo(parent, RelationshipTypes.IS_CHILD_OF)
+        thisNode.createRelationshipTo(parent, RelationshipTypes.IS_PARENT_OF)
         thisNode
     }
 
@@ -178,32 +186,26 @@ class TeiImporter {
         // pick it attribute "unique identifier"
         // TODO: validate if this assumtion is ok
 
-        String id = xml.'@xml:id'.text()
+        String id = xml.attributes()[xmlns.id]
         assert id
-        Label label = DynamicLabel.label( toUpperCamelCase(xml.name()))
+        Label label = DynamicLabel.label( toUpperCamelCase(xml.name().localPart))
         def node = graphDatabaseService.findNode(label, "id", id)
         if (node == null) {
             node = graphDatabaseService.createNode(label)
             node.setProperty("id", id)
             nodeReferences[id] = node
 
-/*
-            String typeAttr = xml.'@type'.text()
-            if (typeAttr) {
-                node.addLabel(DynamicLabel.label(typeAttr))
-            }
-*/
-
             // extract xml tags holding node properties
-            def props = xml.'**'.grep {
-                if (it.name() in ["note"]) return false // TODO: for now, we ignore notes on reference points
+            def props = xml.children().'**'.grep {
+                if (!(it instanceof groovy.util.Node)) return false
+                if (it.name().localPart in ["note"]) return false // TODO: for now, we ignore notes on reference points
 
                 if (it.localText().size() > 1) {
                     throw new RuntimeException("dunno how to handle $xml - tag ${it.name()} has multiple values")
                 }
                  it.localText().size()==1
             }.collectEntries {
-                [it.name(), it.localText()[0] ]
+                [it.name().localPart, it.localText()[0] ]
             }
             props.each { k,v -> node.setProperty(k,v)}
             log.debug("added node (:$label $props)")
@@ -211,7 +213,11 @@ class TeiImporter {
     }
 
     private String toUpperCamelCase(String s) {
-        s[0].toUpperCase() + s[1..-1]
+        def result = s[0].toUpperCase()
+        if (s.length()>1) {
+            result += s[1..-1]
+        }
+        result
     }
 
     private withTransaction(Closure closure) {
