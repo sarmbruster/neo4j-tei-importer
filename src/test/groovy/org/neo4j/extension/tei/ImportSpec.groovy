@@ -32,7 +32,6 @@ class ImportSpec extends Specification {
 //        writeGraphvizPngForLabel(Labels.Source)
 
         then:
-        true
         "match (n) return count(*) as c".cypher()[0].c > 0
 
         and:
@@ -82,7 +81,4 @@ class ImportSpec extends Specification {
         cleanup:
         graphDatabaseService.shutdown()
     }
-
-
 }
-

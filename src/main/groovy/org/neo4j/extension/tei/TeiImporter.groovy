@@ -95,7 +95,7 @@ class TeiImporter {
                 if (referencedNode) {
                     Node first, last
                     for (child in xml.children()) {
-                        def triplet = addDocumentContentsRecursively(child, parent, RelationshipTypes.IS_PARENT_OF, currentEndOfChain)
+                        def triplet = addDocumentContentsRecursively(child, parent, RelationshipTypes.IS_CHILD_OF, currentEndOfChain)
                         currentEndOfChain = triplet.third()
                         if (first == null) {
                             first = triplet.first()
@@ -122,7 +122,7 @@ class TeiImporter {
                     node.setProperty("name", tagName)
                     parent.createRelationshipTo(node, parentRelType)
                     for (child in xml.children()) {
-                        def triplet = addDocumentContentsRecursively(child, node, RelationshipTypes.IS_PARENT_OF, currentEndOfChain ?: node)
+                        def triplet = addDocumentContentsRecursively(child, node, RelationshipTypes.IS_CHILD_OF, currentEndOfChain ?: node)
                         currentEndOfChain = triplet.third()
                     }
                     return Triplet.of(node, node, currentEndOfChain)
@@ -178,7 +178,7 @@ class TeiImporter {
 
     private Node createChildNodeOf(Node parent, Label... labels) {
         Node thisNode = graphDatabaseService.createNode(labels)
-        thisNode.createRelationshipTo(parent, RelationshipTypes.IS_PARENT_OF)
+        thisNode.createRelationshipTo(parent, RelationshipTypes.IS_CHILD_OF)
         thisNode
     }
 
