@@ -9,5 +9,6 @@ public enum RelationshipTypes implements RelationshipType {
     IS_CHILD_OF,
     NEXT,
     HAS_ABSTRACT,
-    HAS_BODY
+    HAS_BODY,
+    NEXT_TAG;
 }

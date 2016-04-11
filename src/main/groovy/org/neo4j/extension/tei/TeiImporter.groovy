@@ -121,8 +121,17 @@ class TeiImporter {
                     String tagName = xml.name().localPart
                     node.setProperty("name", tagName)
                     parent.createRelationshipTo(node, parentRelType)
+
+                    Node lastSibling = null;
                     for (child in xml.children()) {
                         def triplet = addDocumentContentsRecursively(child, node, RelationshipTypes.IS_CHILD_OF, currentEndOfChain ?: node)
+
+                        if (xml instanceof groovy.util.Node) {
+                            if (lastSibling!=null) {
+                                lastSibling.createRelationshipTo(triplet.first(), RelationshipTypes.NEXT_TAG)
+                            }
+                            lastSibling = triplet.first()
+                        }
                         currentEndOfChain = triplet.third()
                     }
                     return Triplet.of(node, node, currentEndOfChain)
