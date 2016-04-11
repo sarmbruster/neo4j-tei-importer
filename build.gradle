@@ -38,6 +38,8 @@ dependencies {
     testCompile group: 'org.neo4j.contrib', name: 'neo4j-spock-extension', version: '0.6.0'
 //    testCompile "org.neo4j.driver:neo4j-java-driver:$neo4jClientVersion"
 
+    testCompile group: 'org.neo4j', name: 'neo4j-graphviz', version: neo4jVersion
+
     runtime 'org.glassfish.jersey.media:jersey-media-json-jackson:2.13'
 }
 
