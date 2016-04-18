@@ -60,10 +60,10 @@
 					beobachtet, und ein ähnliches Phänomen sei im ausgehenden März bzw. Anfang April
 					in <name ref="#Peg">Pegasus</name> und <name ref="#And">Andromeda</name>
 					erschienen. In Anlehnung an <name ref="#P001">Demokrit</name> äußert <name
-						ref="#P007">Langius</name> die Hypothese, dass Kometen aus Atompartikeln
+						ref="#P007">Langius</name> die <rs ref="hyp">Hypothese, dass Kometen aus Atompartikeln
 					gebildet werden: Sie entstünden im Kegelschatten der <name ref="#Terra"
 						>Erde</name> und würden erst dann sichtbar, wenn sie aus diesem hervor- und
-					in das Licht der <name ref="#Sol">Sonne</name> hineinträten. Seine Hypothese
+					in das Licht der <name ref="#Sol">Sonne</name> hineinträten</rs>. Seine Hypothese
 					veranschaulicht <name ref="#P007">Langius</name> mittels einer Zeichnung. Er
 					hält es für denkbar, dass Kometen auch um andere Planeten entstehen könnten. Die
 					Identität der Kometen nachzuweisen, sei kompliziert und nur bei Ausstattung mit
@@ -231,6 +231,12 @@
 							<label>Pegasus</label>
 							<rs type="objectType" key="astro_constallation"/>
 						</item>
+						      <item xml:id="hypothesis">
+						      <idno type="hyp">hypothesis</idno>
+       							<label>hypothese about comets</label>
+						      <rs type="objectType" key="hypothesis"/>
+      						</item>
+ 
 					</list>
 				</keywords>
 			</textClass>
