@@ -11,7 +11,7 @@ import spock.lang.Specification
  */
 class ImportRestSpec extends Specification {
 
-    @Delegate
+    @Delegate(interfaces = false)
     @Rule
     Neo4jServerResource neo4j = new Neo4jServerResource(
             thirdPartyJaxRsPackages: [

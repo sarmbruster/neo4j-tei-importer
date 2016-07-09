@@ -22,7 +22,7 @@ repositories {
 }
 
 ext {
-    neo4jVersion = "2.3.3"
+    neo4jVersion = "3.0.3"
     jerseyVersion = "1.19"
 //    neo4jClientVersion = "1.0.0-M04"
 }
@@ -35,7 +35,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:1.7.20"
 //    compile group: 'org.neo4j.app', name: 'neo4j-server', version: neo4jVersion
 
-    testCompile group: 'org.neo4j.contrib', name: 'neo4j-spock-extension', version: '0.6.0'
+    testCompile group: 'org.neo4j.contrib', name: 'neo4j-spock-extension', version: '0.7.4'
 //    testCompile "org.neo4j.driver:neo4j-java-driver:$neo4jClientVersion"
 
     testCompile group: 'org.neo4j', name: 'neo4j-graphviz', version: neo4jVersion

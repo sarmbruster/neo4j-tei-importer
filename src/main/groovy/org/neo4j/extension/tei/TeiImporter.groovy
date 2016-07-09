@@ -7,7 +7,6 @@ import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.Node
 import org.neo4j.graphdb.RelationshipType
-import org.neo4j.helpers.Triplet
 
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
@@ -87,7 +86,7 @@ class TeiImporter {
      * @param currentEndOfChain
      * @return a triplet of [ firstChildNode, lastChildNode, currentEndOfChain ]
      */
-    private Triplet<Node, Node, Node> addDocumentContentsRecursively(def xml, Node parent, RelationshipType parentRelType, Node currentEndOfChain) {
+    private NodeTriplet addDocumentContentsRecursively(def xml, Node parent, RelationshipType parentRelType, Node currentEndOfChain) {
         switch (xml) {
             case groovy.util.Node:  // we're on a tag (and not on a text node of xml document)
 
@@ -96,11 +95,11 @@ class TeiImporter {
                     Node first, last
                     for (child in xml.children()) {
                         def triplet = addDocumentContentsRecursively(child, parent, RelationshipTypes.IS_CHILD_OF, currentEndOfChain)
-                        currentEndOfChain = triplet.third()
+                        currentEndOfChain = triplet.c
                         if (first == null) {
-                            first = triplet.first()
+                            first = triplet.a
                         }
-                        last = triplet.second()
+                        last = triplet.b
                     }
 
                     // create reference rels
@@ -115,7 +114,7 @@ class TeiImporter {
                     first.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_START"))
                     last.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_END"))
 
-                    return Triplet.of(first, last, currentEndOfChain)
+                    return new NodeTriplet(first, last, currentEndOfChain)
                 } else { // a regular tag (aka not a reference): create a node for this tag and continue recursively for children
                     Node node = graphDatabaseService.createNode(Labels.Tag)
                     String tagName = xml.name().localPart
@@ -128,13 +127,13 @@ class TeiImporter {
 
                         if (xml instanceof groovy.util.Node) {
                             if (lastSibling!=null) {
-                                lastSibling.createRelationshipTo(triplet.first(), RelationshipTypes.NEXT_TAG)
+                                lastSibling.createRelationshipTo(triplet.a, RelationshipTypes.NEXT_TAG)
                             }
-                            lastSibling = triplet.first()
+                            lastSibling = triplet.a
                         }
-                        currentEndOfChain = triplet.third()
+                        currentEndOfChain = triplet.c
                     }
-                    return Triplet.of(node, node, currentEndOfChain)
+                    return new NodeTriplet(node, node, currentEndOfChain)
                 }
                 break
             case String: // we've hit text part, so create a node for every word and connect them via :NEXT
@@ -148,7 +147,7 @@ class TeiImporter {
                         first = last
                     }
                 }
-                return Triplet.of(first, last, currentEndOfChain)
+                return new NodeTriplet(first, last, currentEndOfChain)
                 break
 
             default:
@@ -237,6 +236,18 @@ class TeiImporter {
             return retValue
         } finally {
             tx.close()
+        }
+    }
+
+    private static class NodeTriplet {
+        Node a
+        Node b
+        Node c
+
+        NodeTriplet(Node a, Node b, Node c) {
+            this.a = a
+            this.b = b
+            this.c = c
         }
     }
 }

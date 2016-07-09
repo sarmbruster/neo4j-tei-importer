@@ -18,7 +18,7 @@ import spock.lang.Specification
  */
 class ImportSpec extends Specification {
 
-    @Delegate
+    @Delegate(interfaces=false)
     @Rule
     Neo4jResource neo4j = new Neo4jResource()
 
