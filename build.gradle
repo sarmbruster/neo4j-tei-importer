@@ -22,7 +22,7 @@ repositories {
 }
 
 ext {
-    neo4jVersion = "3.0.3"
+    neo4jVersion = "3.0.6"
     jerseyVersion = "1.19"
 //    neo4jClientVersion = "1.0.0-M04"
 }
