@@ -31,9 +31,10 @@ class IndexSetupKernelExtensionFactory extends KernelExtensionFactory<IndexSetup
                     def transaction = facade.beginTransaction(KernelTransaction.Type.explicit, AccessMode.Static.FULL, 10*1000)
                     try {
                         def schema = facade.schema()
-                        schema.indexFor(Labels.Person).on("idno").create()
-                        schema.indexFor(Labels.Org).on("idno").create()
-                        schema.indexFor(Labels.Place).on("idno").create()
+                        schema.indexFor(Labels.Altmann).on("name").create()
+//                        schema.indexFor(Labels.Person).on("idno").create()
+//                        schema.indexFor(Labels.Org).on("idno").create()
+//                        schema.indexFor(Labels.Place).on("idno").create()
                         transaction.success()
                     } finally {
                         transaction.close()

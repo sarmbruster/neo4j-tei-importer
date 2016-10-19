@@ -25,8 +25,10 @@ class IndexSetupKernelExtensionFactorySpec extends Specification {
         }
 
         then:
-        indexes.size() == 3
-        ["Person", "Org", "Place"].every { indexes[it] == "idno"}
+        indexes.size() == 1
+        ["Altmann"].every { indexes[it] == "name"}
+//        indexes.size() == 3
+//        ["Person", "Org", "Place"].every { indexes[it] == "idno"}
 
     }
 
