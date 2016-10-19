@@ -32,7 +32,9 @@ After a restart using `$NEO4J_HOME/bin/neo4j restart` the extension is ready to 
 
 ## Usage
 
-### upload local XML document via HTTP PUT
+### TEI
+
+#### upload local XML document via HTTP PUT
 
 Using REST a XML TEI file can be imported by simple sending an HTTP PUT to REST endpoint http://host:7474/tei/import. E.g. via cURL:
 
@@ -40,7 +42,7 @@ Using REST a XML TEI file can be imported by simple sending an HTTP PUT to REST 
 curl [-u neo4j:<mypasswd>] -T src/test/resources/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml http://localhost:7474/tei/import
 ----
 
-### submit XML document via URL
+#### submit XML document via URL
 
 Additionally it's possible to omit the payload in the PUT request and specify the URL location of the document via
 url request parameter. Be aware to supply the url in urlencoded variant:
@@ -49,4 +51,10 @@ url request parameter. Be aware to supply the url in urlencoded variant:
 curl [-u neo4j:<mypasswd>] -X PUT http://localhost:7474/tei/import?url=http%3A%2F%2Fmyhost%2Fabc.xml
 ----
 
+### windeck data
 
+There's a stored procedure to import windeck files:
+
+----
+call adwmainz.windeck("file:///var/lib/neo4j/import/windeck_graf.utf8")
+----

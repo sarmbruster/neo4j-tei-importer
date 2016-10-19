@@ -41,7 +41,7 @@ dependencies {
 
     testCompile group: 'org.neo4j', name: 'neo4j-graphviz', version: neo4jVersion
 
-    runtime 'org.glassfish.jersey.media:jersey-media-json-jackson:2.13'
+//    runtime 'org.glassfish.jersey.media:jersey-media-json-jackson:2.13'
 }
 
 version = "1.0.0-SNAPSHOT"
@@ -50,7 +50,7 @@ group = "org.neo4j.extension.adwmainz.tei"
 shadowJar {
   dependencies {
     include(dependency('org.codehaus.groovy:groovy-all'))
-//    include(dependency('org.glassfish.jersey.media:jersey-media-json-jackson'))
+    include(dependency('org.ccil.cowan.tagsoup:tagsoup'))
   }
 }
 

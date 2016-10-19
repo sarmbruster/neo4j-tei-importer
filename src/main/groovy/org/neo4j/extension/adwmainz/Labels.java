@@ -14,6 +14,7 @@ public enum Labels implements Label {
     Word,
     Tag,
     Abstract,
-    Root;
+    Root,
+    Altmann;
 
 }
