@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz.tei
 
 import org.junit.Rule
 import org.neo4j.extension.spock.Neo4jResource
@@ -28,7 +28,7 @@ class ImportSpec extends Specification {
         def cut = new TeiImporter(graphDatabaseService: graphDatabaseService)
 
         when:
-        def result = cut.importXml(this.class.getResourceAsStream("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"), null)
+        def result = cut.importXml(this.class.getResourceAsStream("/tei/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"), null)
 //        writeGraphvizPngForLabel(Labels.Source)
 
         then:

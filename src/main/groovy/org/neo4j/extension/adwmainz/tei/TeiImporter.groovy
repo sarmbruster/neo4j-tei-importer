@@ -1,6 +1,8 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz.tei
 
 import groovy.util.logging.Slf4j
+import org.neo4j.extension.adwmainz.Labels
+import org.neo4j.extension.adwmainz.RelationshipTypes
 import org.neo4j.graphdb.DynamicLabel
 import org.neo4j.graphdb.DynamicRelationshipType
 import org.neo4j.graphdb.GraphDatabaseService

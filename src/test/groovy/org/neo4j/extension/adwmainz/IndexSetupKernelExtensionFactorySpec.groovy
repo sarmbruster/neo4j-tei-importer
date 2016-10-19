@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz
 
 import org.junit.Rule
 import org.neo4j.extension.spock.Neo4jResource

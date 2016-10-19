@@ -16,17 +16,17 @@ To build the project just type:
 Copy (or symlink) the resulting file `./build/libs/neo4j-tei-importer-0.1-SNAPSHOT-all.jar` to Neo4j's `plugins` folder.
 
 
-### for Neo4j <= 2.3.x
+### for Neo4j < = 2.3.x
 
 Change configuration in `$NEO4J/conf/neo4j-server.properties`:
 
-    org.neo4j.server.thirdparty_jaxrs_classes=org.neo4j.extension.tei=/tei
+    org.neo4j.server.thirdparty_jaxrs_classes=org.neo4j.extension.adwmainz.tei=/tei
 
 ### for Neo4j >= 3.0.0
 
 Change configuration in `$NEO4J/conf/neo4j.conf`:
 
-    dbms.unmanaged_extension_classes=org.neo4j.extension.tei=/tei
+    dbms.unmanaged_extension_classes=org.neo4j.extension.adwmainz.tei=/tei
 
 After a restart using `$NEO4J_HOME/bin/neo4j restart` the extension is ready to use.
 

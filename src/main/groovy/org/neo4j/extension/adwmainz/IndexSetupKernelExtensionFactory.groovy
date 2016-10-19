@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz
 
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.api.security.AccessMode
