@@ -56,5 +56,7 @@ curl [-u neo4j:<mypasswd>] -X PUT http://localhost:7474/tei/import?url=http%3A%2
 There's a stored procedure to import windeck files:
 
 ----
-call adwmainz.windeck("file:///var/lib/neo4j/import/windeck_graf.utf8")
+call adwmainz.windeck("file:///var/lib/neo4j/import/windeck_graf.utf8", 12344)
 ----
+
+Second parameter is the word offset number.

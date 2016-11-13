@@ -16,10 +16,13 @@ class WindeckImporterSpec extends Specification {
 
     def "should import text file"() {
         when:
-        def result = "CALL adwmainz.windeck('file:src/test/resources/windeck/windeck_graf.utf8.small')".cypher()
+        def result = "CALL adwmainz.windeck('file:src/test/resources/windeck/windeck_graf.utf8.small', 10)".cypher()
 
         then:
         "match (n) return count(*) as c".cypher()[0].c == 832
+
+        and:
+        "match (n:Word) return min(n.position) as pos".cypher()[0].pos == 10
         //aresult == "abc"
 
     }

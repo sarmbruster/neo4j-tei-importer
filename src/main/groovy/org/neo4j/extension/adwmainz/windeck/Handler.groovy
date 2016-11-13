@@ -22,7 +22,7 @@ class Handler extends DefaultHandler {
     Node rootNode
     Node currentTag
     Node previousTag
-    int wordCount = 0
+    int position = 1
     boolean linkToCurrentTag = false
 
     // status variables for altmann
@@ -109,7 +109,7 @@ class Handler extends DefaultHandler {
             text.split(/\s+/).findAll {it}.each {
                 Node wordNode = graphDatabaseService.createNode(Labels.Word)
                 wordNode.setProperty("text", it)
-                wordNode.setProperty("position", ++wordCount)
+                wordNode.setProperty("position", position++)
                 if (latestWordNode) {
                     latestWordNode.createRelationshipTo(wordNode, RelationshipTypes.NEXT)
                 }

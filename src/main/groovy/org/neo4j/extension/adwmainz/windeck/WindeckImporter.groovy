@@ -28,7 +28,7 @@ class WindeckImporter {
 
     @Procedure(value = "adwmainz.windeck")
     @PerformsWrites
-    public Stream<NodeResult> importWindeck(@Name("url") String url) {
+    public Stream<NodeResult> importWindeck(@Name("url") String url, @Name("offset") long offset) {
 
         log.info("importing document from uri %s", url)
 
@@ -40,7 +40,7 @@ class WindeckImporter {
         InputStream document = new SequenceInputStream(Collections.enumeration(streams))
 
         SAXParser saxParser = SAXParserImpl.newInstance()
-        def handler = new Handler(url: url, graphDatabaseService: graphDatabaseService)
+        def handler = new Handler(url: url, graphDatabaseService: graphDatabaseService, position: offset as int)
         saxParser.parse(document, handler)
         Stream.of(new NodeResult(node:handler.rootNode))
     }
