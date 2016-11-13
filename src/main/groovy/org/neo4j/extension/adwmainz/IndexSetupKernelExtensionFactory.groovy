@@ -1,5 +1,9 @@
 package org.neo4j.extension.adwmainz
 
+import org.neo4j.graphdb.Label
+import org.neo4j.graphdb.schema.IndexDefinition
+import org.neo4j.graphdb.schema.Schema
+import org.neo4j.helpers.collection.Iterables
 import org.neo4j.kernel.api.KernelTransaction
 import org.neo4j.kernel.api.security.AccessMode
 import org.neo4j.kernel.extension.KernelExtensionFactory
@@ -30,8 +34,8 @@ class IndexSetupKernelExtensionFactory extends KernelExtensionFactory<IndexSetup
                     def facade = dependencies.graphDatabaseFacade()
                     def transaction = facade.beginTransaction(KernelTransaction.Type.explicit, AccessMode.Static.FULL, 10*1000)
                     try {
-                        def schema = facade.schema()
-                        schema.indexFor(Labels.Altmann).on("name").create()
+                        Schema schema = facade.schema()
+                        createIndexIfNotExists(schema, Labels.Altmann, "name")
 //                        schema.indexFor(Labels.Person).on("idno").create()
 //                        schema.indexFor(Labels.Org).on("idno").create()
 //                        schema.indexFor(Labels.Place).on("idno").create()
@@ -40,6 +44,22 @@ class IndexSetupKernelExtensionFactory extends KernelExtensionFactory<IndexSetup
                         transaction.close()
                     }
                 }
+            }
+
+            void createIndexIfNotExists(Schema schema, Label label, String propertyKey) {
+                if (!indexExists(schema, label, propertyKey)) {
+                    schema.indexFor(label).on(propertyKey).create()
+                }
+            }
+
+            boolean indexExists(Schema schema, Label label, String propertyKey) {
+                for (IndexDefinition id: schema.getIndexes(label)) {
+                    String indexProperty = Iterables.single(id.propertyKeys);
+                    if (indexProperty == propertyKey) {
+                        return true
+                    }
+                }
+                return false
             }
         }
     }
