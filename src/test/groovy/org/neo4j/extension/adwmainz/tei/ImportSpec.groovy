@@ -7,9 +7,9 @@ import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.helpers.collection.Iterables
-import org.neo4j.visualization.graphviz.GraphvizWriter
-import org.neo4j.walk.Visitor
-import org.neo4j.walk.Walker
+//import org.neo4j.visualization.graphviz.GraphvizWriter
+//import org.neo4j.walk.Visitor
+//import org.neo4j.walk.Walker
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -42,6 +42,7 @@ class ImportSpec extends Specification {
 
     }
 
+/*
     private void writeGraphvizPngForLabel(Label label) {
         def file = File.createTempFile("neo4j", ".dot")
         Neo4jUtils.withTransaction(graphDatabaseService, {
@@ -62,6 +63,7 @@ class ImportSpec extends Specification {
         "dot -Tpng -O $file".execute()
         "eog ${file}.png".execute()
     }
+*/
 
     @Ignore
     def "populate test db"() {

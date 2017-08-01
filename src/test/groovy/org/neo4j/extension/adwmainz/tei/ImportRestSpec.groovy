@@ -22,7 +22,7 @@ class ImportRestSpec extends Specification {
 
     def "upload a file"() {
         when:
-        def response = neo4j.http.PUT("tei/import", HTTP.RawPayload.rawPayload(testResource.text))
+        def response = neo4j.http.request("PUT", "tei/import", HTTP.RawPayload.rawPayload(testResource.text))
 
         then:
         def e = thrown(UniformInterfaceException)  // HTTP 204 (empty response) throws and exception
@@ -32,7 +32,7 @@ class ImportRestSpec extends Specification {
     def "import a file by url reference"() {
         when:
         def urlEncodedUrl = URLEncoder.encode(testResource.toString(), "UTF-8")
-        def response = neo4j.http.PUT("tei/import?url=${urlEncodedUrl}")
+        def response = neo4j.http.request("PUT", "tei/import?url=${urlEncodedUrl}")
 
         then:
         def e = thrown(UniformInterfaceException)  // HTTP 204 (empty response) throws and exception
