@@ -15,24 +15,30 @@ To build the project just type:
 
 Copy (or symlink) the resulting file `./build/libs/neo4j-tei-importer-0.1-SNAPSHOT-all.jar` to Neo4j's `plugins` folder.
 
-
-### for Neo4j < = 2.3.x
-
-Change configuration in `$NEO4J/conf/neo4j-server.properties`:
-
-    org.neo4j.server.thirdparty_jaxrs_classes=org.neo4j.extension.adwmainz.tei=/tei
-
-### for Neo4j >= 3.0.0
-
-Change configuration in `$NEO4J/conf/neo4j.conf`:
+If you want to use the "old" REST endpoints in contrast to Cypher stored procedure, change configuration in `$NEO4J/conf/neo4j.conf`:
 
     dbms.unmanaged_extension_classes=org.neo4j.extension.adwmainz.tei=/tei
+
 
 After a restart using `$NEO4J_HOME/bin/neo4j restart` the extension is ready to use.
 
 ## Usage
 
 ### TEI
+
+For an example of a imported XML TEI document refer to the following screenshot
+
+image::docs/humboldt_soemmering01_1791.TEI-P5.png[sample document]
+
+#### import a TEI XML document via Cypher stored procedure
+
+The preferred option for importing is calling a Cypher stored procedure. A URL to the XML document to be imported needs to be provided as parameter - could be either `file`, `http`, `https` or `ftp:`.
+The procedure returns the node representing the document in the graph.
+
+Example:
+----
+CALL tei.import('file:///var/lib/neo4j/import/humboldt_soemmering01_1791.TEI-P5 (1).xml') yield node return node
+----
 
 #### upload local XML document via HTTP PUT
 
@@ -50,6 +56,13 @@ url request parameter. Be aware to supply the url in urlencoded variant:
 ----
 curl [-u neo4j:<mypasswd>] -X PUT http://localhost:7474/tei/import?url=http%3A%2F%2Fmyhost%2Fabc.xml
 ----
+
+#### useful cypher queries on TEI data
+
+get back the original text contained in the document::
+`match (s:Source)-[:HAS_BODY]->(b), p=(b)-[:NEXT*]->(e)
+ where not (e)-[:NEXT*]->()
+ return apoc.text.join([x in nodes(p) where x:Word | x.text], " ") as text`
 
 ### windeck data
 
