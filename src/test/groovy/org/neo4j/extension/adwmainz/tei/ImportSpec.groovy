@@ -83,4 +83,14 @@ class ImportSpec extends Specification {
         cleanup:
         graphDatabaseService.shutdown()
     }
+
+    def "import via sproc"() {
+        when:
+        def result = "CALL tei.import('file:src/test/resources/tei/humboldt_soemmering01_1791.TEI-P5 (1).xml') yield node return node".cypher()
+
+        def node = result[0].node
+
+        then:
+        node != null
+    }
 }

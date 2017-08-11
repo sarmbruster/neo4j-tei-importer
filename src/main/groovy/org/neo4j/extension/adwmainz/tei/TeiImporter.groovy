@@ -3,8 +3,6 @@ package org.neo4j.extension.adwmainz.tei
 import groovy.util.logging.Slf4j
 import org.neo4j.extension.adwmainz.Labels
 import org.neo4j.extension.adwmainz.RelationshipTypes
-import org.neo4j.graphdb.DynamicLabel
-import org.neo4j.graphdb.DynamicRelationshipType
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.Node
@@ -37,11 +35,15 @@ class TeiImporter {
      */
     @PUT
     void importXml(InputStream inputStream, @QueryParam("url") URL url) {
-
         if (url) {
             log.info "fetch url $url"
             inputStream = url.newInputStream()
         }
+        importXml(inputStream)
+
+    }
+
+    Node importXml(InputStream inputStream) {
 
         withTransaction {
             def tei = new XmlParser().parse(inputStream)
@@ -71,12 +73,14 @@ class TeiImporter {
 
             // abstract
             def abstr = tei.teiHeader.profileDesc.abstract
-            assert abstr.size() == 1
-            addDocumentContentsRecursively(abstr[0], source, RelationshipTypes.HAS_ABSTRACT, null)
+            abstr.each {
+                addDocumentContentsRecursively(it, source, RelationshipTypes.HAS_ABSTRACT, null)
+            }
 
             // complete text
             addDocumentContentsRecursively(tei.text.body[0], source, RelationshipTypes.HAS_BODY, null)
 
+            return source
         }
     }
 
@@ -109,12 +113,12 @@ class TeiImporter {
                     def relTypeName = "REF_" + xml.name().localPart.toUpperCase()
 
                     // the hyperedge node is connected via REF_<tagname> relationship to the referenced "thing" (person, place, item,...)
-                    hyperEdge.createRelationshipTo(referencedNode, DynamicRelationshipType.withName(relTypeName))
+                    hyperEdge.createRelationshipTo(referencedNode, RelationshipType.withName(relTypeName))
 
                     // for first and last word point to the hyperedge using REF_<tagname>_START and REF_<tagname>_END relationships
                     // in most cases first and last will be the same node, but there might be references spawning over multiple words
-                    first.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_START"))
-                    last.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_END"))
+                    first.createRelationshipTo(hyperEdge, RelationshipType.withName("${relTypeName}_START"))
+                    last.createRelationshipTo(hyperEdge, RelationshipType.withName("${relTypeName}_END"))
 
                     return new NodeTriplet(first, last, currentEndOfChain)
                 } else { // a regular tag (aka not a reference): create a node for this tag and continue recursively for children
@@ -169,7 +173,7 @@ class TeiImporter {
         assert relType
 
         Node hyperEdge = graphDatabaseService.createNode()
-        def rel = sourceNode.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName(relType))
+        def rel = sourceNode.createRelationshipTo(hyperEdge, RelationshipType.withName(relType))
 
         for (tag in xml.children()) {
 
@@ -178,7 +182,7 @@ class TeiImporter {
             if (ref) {
                 ref = ref[1..-1] // strip off leading "#"
                 assert nodeReferences[ref] : "no reference node for $ref found"
-                hyperEdge.createRelationshipTo(nodeReferences[ref], DynamicRelationshipType.withName(tagName.toUpperCase()))
+                hyperEdge.createRelationshipTo(nodeReferences[ref], RelationshipType.withName(tagName.toUpperCase()))
             } else if (tagName == 'date') {
                 // set all date properties
                 tag.attributes().each {k,v -> rel.setProperty(k,v)}
@@ -198,7 +202,7 @@ class TeiImporter {
 
         String id = xml.attributes()[xmlns.id]
         assert id
-        Label label = DynamicLabel.label( toUpperCamelCase(xml.name().localPart))
+        Label label = Label.label( toUpperCamelCase(xml.name().localPart))
         def node = graphDatabaseService.findNode(label, "id", id)
         if (node == null) {
             node = graphDatabaseService.createNode(label)
