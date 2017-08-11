@@ -1,6 +1,6 @@
 plugins {
     id 'groovy'
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
     id 'idea'
 }
 
@@ -22,7 +22,7 @@ repositories {
 }
 
 ext {
-    neo4jVersion = "3.2.2"
+    neo4jVersion = "3.2.3"
     jerseyVersion = "1.19"
 //    neo4jClientVersion = "1.0.0-M04"
 }
@@ -30,9 +30,9 @@ ext {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.12'
     compile group: 'org.ccil.cowan.tagsoup', name: 'tagsoup', version: '1.2.1'
-    compile group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion
-    compile group: 'org.neo4j', name: 'neo4j-lucene-index', version: neo4jVersion
-    compile group: 'org.neo4j', name: 'server-api', version: neo4jVersion
+    compileOnly group: 'org.neo4j', name: 'neo4j-kernel', version: neo4jVersion
+    compileOnly group: 'org.neo4j', name: 'neo4j-lucene-index', version: neo4jVersion
+    compileOnly group: 'org.neo4j', name: 'server-api', version: neo4jVersion
     compile "org.slf4j:slf4j-api:1.7.20"
 //    compile group: 'org.neo4j.app', name: 'neo4j-server', version: neo4jVersion
 
@@ -46,13 +46,6 @@ dependencies {
 
 version = "1.0.0-SNAPSHOT"
 group = "org.neo4j.extension.adwmainz.tei"
-
-shadowJar {
-  dependencies {
-    include(dependency('org.codehaus.groovy:groovy-all'))
-    include(dependency('org.ccil.cowan.tagsoup:tagsoup'))
-  }
-}
 
 test {
     systemProperties 'user.language': 'en', 'user.country': 'US'
