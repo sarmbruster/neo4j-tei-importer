@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei;
+package org.neo4j.extension.adwmainz;
 
 import org.neo4j.graphdb.RelationshipType;
 
@@ -10,5 +10,9 @@ public enum RelationshipTypes implements RelationshipType {
     NEXT,
     HAS_ABSTRACT,
     HAS_BODY,
-    NEXT_TAG;
+    NEXT_TAG,
+    STARTS_AT,
+    ENDS_AT,
+    ALTMANN_REF,
+    NEXT_ALTMANN;
 }

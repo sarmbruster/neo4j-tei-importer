@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz.tei
 
 import com.sun.jersey.api.client.UniformInterfaceException
 import org.junit.Rule
@@ -11,18 +11,18 @@ import spock.lang.Specification
  */
 class ImportRestSpec extends Specification {
 
-    @Delegate
+    @Delegate(interfaces = false)
     @Rule
     Neo4jServerResource neo4j = new Neo4jServerResource(
             thirdPartyJaxRsPackages: [
-                    "org.neo4j.extension.tei": "/tei",
+                    "org.neo4j.extension.adwmainz.tei": "/tei",
             ]
     )
-    def testResource = this.class.getResource("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml")
+    def testResource = this.class.getResource("/tei/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml")
 
     def "upload a file"() {
         when:
-        def response = neo4j.http.PUT("tei/import", HTTP.RawPayload.rawPayload(testResource.text))
+        def response = neo4j.http.request("PUT", "tei/import", HTTP.RawPayload.rawPayload(testResource.text))
 
         then:
         def e = thrown(UniformInterfaceException)  // HTTP 204 (empty response) throws and exception
@@ -32,7 +32,7 @@ class ImportRestSpec extends Specification {
     def "import a file by url reference"() {
         when:
         def urlEncodedUrl = URLEncoder.encode(testResource.toString(), "UTF-8")
-        def response = neo4j.http.PUT("tei/import?url=${ urlEncodedUrl}")
+        def response = neo4j.http.request("PUT", "tei/import?url=${urlEncodedUrl}")
 
         then:
         def e = thrown(UniformInterfaceException)  // HTTP 204 (empty response) throws and exception

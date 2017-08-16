@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei;
+package org.neo4j.extension.adwmainz;
 
 import org.neo4j.graphdb.Label;
 
@@ -13,6 +13,8 @@ public enum Labels implements Label {
     Reference, // allg. Referenzknoten
     Word,
     Tag,
-    Abstract;
+    Abstract,
+    Root,
+    Altmann;
 
 }

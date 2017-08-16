@@ -1,4 +1,4 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz.tei
 
 import org.junit.Rule
 import org.neo4j.extension.spock.Neo4jResource
@@ -7,9 +7,9 @@ import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.factory.GraphDatabaseFactory
 import org.neo4j.helpers.collection.Iterables
-import org.neo4j.visualization.graphviz.GraphvizWriter
-import org.neo4j.walk.Visitor
-import org.neo4j.walk.Walker
+//import org.neo4j.visualization.graphviz.GraphvizWriter
+//import org.neo4j.walk.Visitor
+//import org.neo4j.walk.Walker
 import spock.lang.Ignore
 import spock.lang.Specification
 
@@ -18,7 +18,7 @@ import spock.lang.Specification
  */
 class ImportSpec extends Specification {
 
-    @Delegate
+    @Delegate(interfaces=false)
     @Rule
     Neo4jResource neo4j = new Neo4jResource()
 
@@ -28,7 +28,7 @@ class ImportSpec extends Specification {
         def cut = new TeiImporter(graphDatabaseService: graphDatabaseService)
 
         when:
-        def result = cut.importXml(this.class.getResourceAsStream("/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"), null)
+        def result = cut.importXml(this.class.getResourceAsStream("/tei/1667-09-23_Langius_a_Lubienietzki-mit-Regest-ohne-Kommentar.xml"), null)
 //        writeGraphvizPngForLabel(Labels.Source)
 
         then:
@@ -42,6 +42,7 @@ class ImportSpec extends Specification {
 
     }
 
+/*
     private void writeGraphvizPngForLabel(Label label) {
         def file = File.createTempFile("neo4j", ".dot")
         Neo4jUtils.withTransaction(graphDatabaseService, {
@@ -62,6 +63,7 @@ class ImportSpec extends Specification {
         "dot -Tpng -O $file".execute()
         "eog ${file}.png".execute()
     }
+*/
 
     @Ignore
     def "populate test db"() {
@@ -80,5 +82,15 @@ class ImportSpec extends Specification {
 
         cleanup:
         graphDatabaseService.shutdown()
+    }
+
+    def "import via sproc"() {
+        when:
+        def result = "CALL tei.import('file:src/test/resources/tei/humboldt_soemmering01_1791.TEI-P5 (1).xml') yield node return node".cypher()
+
+        def node = result[0].node
+
+        then:
+        node != null
     }
 }

@@ -1,4 +1,15 @@
-sudo: false
 language: groovy
 jdk:
   - oraclejdk8
+install: echo "skip 'gradle assemble' step"
+env:
+  global:
+    - GRADLE_OPTS="-Xms128m -Dorg.gradle.daemon=false"
+script: ./gradlew build --continue
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

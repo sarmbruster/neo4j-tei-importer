@@ -1,13 +1,12 @@
-package org.neo4j.extension.tei
+package org.neo4j.extension.adwmainz.tei
 
 import groovy.util.logging.Slf4j
-import org.neo4j.graphdb.DynamicLabel
-import org.neo4j.graphdb.DynamicRelationshipType
+import org.neo4j.extension.adwmainz.Labels
+import org.neo4j.extension.adwmainz.RelationshipTypes
 import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.Label
 import org.neo4j.graphdb.Node
 import org.neo4j.graphdb.RelationshipType
-import org.neo4j.helpers.Triplet
 
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
@@ -36,11 +35,15 @@ class TeiImporter {
      */
     @PUT
     void importXml(InputStream inputStream, @QueryParam("url") URL url) {
-
         if (url) {
             log.info "fetch url $url"
             inputStream = url.newInputStream()
         }
+        importXml(inputStream)
+
+    }
+
+    Node importXml(InputStream inputStream) {
 
         withTransaction {
             def tei = new XmlParser().parse(inputStream)
@@ -70,12 +73,14 @@ class TeiImporter {
 
             // abstract
             def abstr = tei.teiHeader.profileDesc.abstract
-            assert abstr.size() == 1
-            addDocumentContentsRecursively(abstr[0], source, RelationshipTypes.HAS_ABSTRACT, null)
+            abstr.each {
+                addDocumentContentsRecursively(it, source, RelationshipTypes.HAS_ABSTRACT, null)
+            }
 
             // complete text
             addDocumentContentsRecursively(tei.text.body[0], source, RelationshipTypes.HAS_BODY, null)
 
+            return source
         }
     }
 
@@ -87,7 +92,7 @@ class TeiImporter {
      * @param currentEndOfChain
      * @return a triplet of [ firstChildNode, lastChildNode, currentEndOfChain ]
      */
-    private Triplet<Node, Node, Node> addDocumentContentsRecursively(def xml, Node parent, RelationshipType parentRelType, Node currentEndOfChain) {
+    private NodeTriplet addDocumentContentsRecursively(def xml, Node parent, RelationshipType parentRelType, Node currentEndOfChain) {
         switch (xml) {
             case groovy.util.Node:  // we're on a tag (and not on a text node of xml document)
 
@@ -96,11 +101,11 @@ class TeiImporter {
                     Node first, last
                     for (child in xml.children()) {
                         def triplet = addDocumentContentsRecursively(child, parent, RelationshipTypes.IS_CHILD_OF, currentEndOfChain)
-                        currentEndOfChain = triplet.third()
+                        currentEndOfChain = triplet.c
                         if (first == null) {
-                            first = triplet.first()
+                            first = triplet.a
                         }
-                        last = triplet.second()
+                        last = triplet.b
                     }
 
                     // create reference rels
@@ -108,14 +113,14 @@ class TeiImporter {
                     def relTypeName = "REF_" + xml.name().localPart.toUpperCase()
 
                     // the hyperedge node is connected via REF_<tagname> relationship to the referenced "thing" (person, place, item,...)
-                    hyperEdge.createRelationshipTo(referencedNode, DynamicRelationshipType.withName(relTypeName))
+                    hyperEdge.createRelationshipTo(referencedNode, RelationshipType.withName(relTypeName))
 
                     // for first and last word point to the hyperedge using REF_<tagname>_START and REF_<tagname>_END relationships
                     // in most cases first and last will be the same node, but there might be references spawning over multiple words
-                    first.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_START"))
-                    last.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName("${relTypeName}_END"))
+                    first.createRelationshipTo(hyperEdge, RelationshipType.withName("${relTypeName}_START"))
+                    last.createRelationshipTo(hyperEdge, RelationshipType.withName("${relTypeName}_END"))
 
-                    return Triplet.of(first, last, currentEndOfChain)
+                    return new NodeTriplet(first, last, currentEndOfChain)
                 } else { // a regular tag (aka not a reference): create a node for this tag and continue recursively for children
                     Node node = graphDatabaseService.createNode(Labels.Tag)
                     String tagName = xml.name().localPart
@@ -128,13 +133,13 @@ class TeiImporter {
 
                         if (xml instanceof groovy.util.Node) {
                             if (lastSibling!=null) {
-                                lastSibling.createRelationshipTo(triplet.first(), RelationshipTypes.NEXT_TAG)
+                                lastSibling.createRelationshipTo(triplet.a, RelationshipTypes.NEXT_TAG)
                             }
-                            lastSibling = triplet.first()
+                            lastSibling = triplet.a
                         }
-                        currentEndOfChain = triplet.third()
+                        currentEndOfChain = triplet.c
                     }
-                    return Triplet.of(node, node, currentEndOfChain)
+                    return new NodeTriplet(node, node, currentEndOfChain)
                 }
                 break
             case String: // we've hit text part, so create a node for every word and connect them via :NEXT
@@ -148,7 +153,7 @@ class TeiImporter {
                         first = last
                     }
                 }
-                return Triplet.of(first, last, currentEndOfChain)
+                return new NodeTriplet(first, last, currentEndOfChain)
                 break
 
             default:
@@ -168,7 +173,7 @@ class TeiImporter {
         assert relType
 
         Node hyperEdge = graphDatabaseService.createNode()
-        def rel = sourceNode.createRelationshipTo(hyperEdge, DynamicRelationshipType.withName(relType))
+        def rel = sourceNode.createRelationshipTo(hyperEdge, RelationshipType.withName(relType))
 
         for (tag in xml.children()) {
 
@@ -177,7 +182,7 @@ class TeiImporter {
             if (ref) {
                 ref = ref[1..-1] // strip off leading "#"
                 assert nodeReferences[ref] : "no reference node for $ref found"
-                hyperEdge.createRelationshipTo(nodeReferences[ref], DynamicRelationshipType.withName(tagName.toUpperCase()))
+                hyperEdge.createRelationshipTo(nodeReferences[ref], RelationshipType.withName(tagName.toUpperCase()))
             } else if (tagName == 'date') {
                 // set all date properties
                 tag.attributes().each {k,v -> rel.setProperty(k,v)}
@@ -197,7 +202,7 @@ class TeiImporter {
 
         String id = xml.attributes()[xmlns.id]
         assert id
-        Label label = DynamicLabel.label( toUpperCamelCase(xml.name().localPart))
+        Label label = Label.label( toUpperCamelCase(xml.name().localPart))
         def node = graphDatabaseService.findNode(label, "id", id)
         if (node == null) {
             node = graphDatabaseService.createNode(label)
@@ -237,6 +242,18 @@ class TeiImporter {
             return retValue
         } finally {
             tx.close()
+        }
+    }
+
+    private static class NodeTriplet {
+        Node a
+        Node b
+        Node c
+
+        NodeTriplet(Node a, Node b, Node c) {
+            this.a = a
+            this.b = b
+            this.c = c
         }
     }
 }
