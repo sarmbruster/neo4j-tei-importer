@@ -1,5 +1,4 @@
-WARN: there's a generic XML in the APOC library, see https://neo4j.com/docs/labs/apoc/current/import/xml/#load-xml-available-procedures-apoc.import.xml
-
+## *WARNING: there's a generic XML in the APOC library, see https://neo4j.com/docs/labs/apoc/current/import/xml/#load-xml-available-procedures-apoc.import.xml*
 
 
 # neo4j-tei-importer
