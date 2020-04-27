@@ -2,6 +2,10 @@
 
 image::https://travis-ci.org/sarmbruster/neo4j-tei-importer.svg?branch=master[alt="Travis CI Status", link="https://travis-ci.org/sarmbruster/neo4j-tei-importer"]
 
+WARN: there's a generic XML in the APOC library, see https://neo4j.com/docs/labs/apoc/current/import/xml/#load-xml-available-procedures-apoc.import.xml
+
+
+
 neo4j-tei-importer imports data from XML files using the http://www.tei-c.org[TEI] schema to a Neo4j database.
 
 
